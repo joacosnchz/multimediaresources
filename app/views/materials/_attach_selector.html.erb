@@ -1,0 +1,86 @@
+<style>
+  @media (min-width: 992px) {
+    body .modal {
+      width: 64.1%;
+    }
+  }
+
+  .modal {
+    position: absolute;
+  }
+
+  .file-selector {
+    border-spacing:10px;
+    border-collapse: separate;
+  }
+  .file-selector td {
+    padding:5px;
+    transition: box-shadow 0.3s;
+  }
+  .file-selector td:hover .opt {
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* For IE8 and earlier */
+  }
+  .selected {
+    box-shadow: 0px 0px 4px #f00;
+  }
+
+  .file-selector img, video, audio {
+    border: 1px solid #999;
+  }
+</style>
+
+<div class="modal fade" role="dialog" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" style="display:none;">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Selector de archivos</h4>
+      </div>
+      <div class="modal-body">
+        <!-- <button id="seleccion" class="btn">Selecci&oacute;n m&uacute;ltiple</button>
+        filtro de imagenes -->
+        Mostrar categorias:
+        <%= select_tag :category_id, options_for_select(Category.all.collect{|c|[c.description, c.id]}), {prompt: 'Todas las categorias'} %>
+        <hr>
+        <span class="imagenes">
+          <%= render :partial => 'materials/includes/images_table' %>
+        </span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default modal-cancel" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary modal-ok" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function() {
+    $('#seleccion').click(function() {
+      if($(this).attr('class') == 'btn') {
+        $(this).attr('class', 'btn active');
+      } else {
+        $(this).attr('class', 'btn');
+      }
+    });
+
+    $('.modal-cancel').click(function() {
+      var attachmentHolder = $('#attachmentHolder');
+      var images = $('.images');
+
+      $('.selected').attr('class', '');
+      images.val('');
+      attachmentHolder.html('');
+    });
+
+    $('.modal-ok').click(function() {
+      var url = '/materials/get-files';
+      var attachmentHolder = $('#attachmentHolder');
+
+      $.post(url, {'material_attachments': $('.images').val()}).done(function(data) {
+        attachmentHolder.html(data);
+      });
+    });
+  });
+</script>

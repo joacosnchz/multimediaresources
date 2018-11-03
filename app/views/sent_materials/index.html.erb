@@ -1,0 +1,74 @@
+<%- model_class = SentMaterial -%>
+<h2 class="page-header" style="margin-top:-2px;">Materiales enviados</h2>
+
+<% if false %>
+<div  class="form-actions">
+<table>
+<tr>
+  <td><button class="btn btn-danger borrar">Borrar</button></td>
+</tr>
+</table>
+</div>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>#</th>
+    <% if false %><th><input type="checkbox" value="yes" id="selectAll"/></th><% end %>
+    <th>Material</th>
+    <th>Enviado por</th>
+    <th>Fecha</th>
+  </tr>
+  </thead>
+<tbody>
+<% @sent_materials.each_with_index do |sent_material, index| %>
+  <tr id="list">
+    <td><%= index + 1 %></td>
+    <% if false %>
+      <td><input type="checkbox" class="tf" value="<%= sent_material.id %>" ></td>
+    <% end %>
+    <td><%= link_to t('.edit', :default => sent_material.material.title), edit_material_path(sent_material.material.id), :style => 'text-decoration:underline' %></td>
+    <td><%= sent_material.user.email %></td>
+    <td>
+      <% if sent_material.created_at.present? %>
+        <%=l sent_material.created_at, format: '%a, %d de %b de %Y' %>
+      <% end %>
+    </td>
+    <% if false %>
+    <td><%= link_to 'Show', sent_material %></td>
+    <td><%= link_to 'Edit', edit_sent_material_path(sent_material) %></td>
+    <td><%= link_to 'Destroy', sent_material, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<div class="digg_pagination">
+  <%= will_paginate @sent_materials, :container => false %>
+</div>
+
+<% if false %>
+<script>
+$(function() {
+  $('.borrar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var c = confirm('Esta seguro?');
+      if(c == true) {
+        var route = '/sent_materials/bulk_delete?ids=PLACEHOLDER';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+      }
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+});
+</script>
+<% end %>

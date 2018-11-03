@@ -1,0 +1,22 @@
+<%= form_tag(users_path, method: :put, :id => 'customer_search', :remote => false) %>
+  <table class="table table-bordered table-condensed table-nohover">
+    <thead>
+      <tr><th colspan="3">Criterios de busqueda</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="control-group">
+            <div class="controls">
+              <%= text_field_tag :email, session[controller_name.to_sym][:email], :class => 'text_field', :placeholder => 'Email' %>
+              <%= select_tag :media_id, options_for_select(Media.order('nombre').all.collect{|m| [m.nombre, m.id]}, session[controller_name.to_sym][:media_id]), {prompt: 'Seleccione medio'} %>
+              <%= button_tag(:class => 'btn btn-primary', :style => 'margin-top:-10px') do %>
+                <span class="icon-search"></span> Buscar
+              <% end %>
+              <%= link_to "Reestablecer", users_path(:reset => true), :class => 'btn btn-default', :style => 'margin-top:-10px' %>
+            </div>
+          </div>
+        </td>
+    </tbody>
+  </table>
+</form>

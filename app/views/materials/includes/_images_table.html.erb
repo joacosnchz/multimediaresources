@@ -1,0 +1,87 @@
+<table class="file-selector">
+  <% if @archivos.present? %>
+    <% @archivos.each_with_index do |attachment, index| %>
+      <% if index%3 == 0 %>
+        <% if index != 0 %>
+          </tr>
+        <% end %>
+        <tr>
+      <% end %>
+      <td value="<%= attachment.id %>" style="width:225px">
+        <% if attachment.attach_content_type =~ /^image\// %>
+          <img class="opt" src="<%= attachment.attach.url %>" style="width:255px;height:225px;" /><br>
+          <%=h truncate(attachment.attach_file_name, :length => 25) %>
+        <% end %>
+
+        <% if attachment.attach_content_type =~ /^video\// %>
+          <video class="opt" controls style="width:255px;height:225px;" >
+            <source src="<%= attachment.attach.url %>" type="<%= attachment.attach_content_type %>" >
+            Su navegador no puede ver videos
+          </video>
+          <%=h truncate(attachment.attach_file_name, :length => 25) %>
+        <% end %>
+
+        <% if attachment.attach_content_type =~ /^audio\// %>
+          <audio class="opt" style="width:255px;height:225px;" controls>
+            <source src="<%= attachment.attach.url %>" type="<%= attachment.attach_content_type %>" />
+          </audio>
+          <%=h truncate(attachment.attach_file_name, :length => 25) %>
+        <% end %>
+        </td>
+    <% end %>
+  <% else %>
+    No hay archivos en la categoría seleccionada.
+  <% end %>
+</table>
+
+<script>
+  $(function() {
+    $('#category_id').change(function(e) {
+      var url = '/materials/attach_table_by_category';
+      var id = $(this).val();
+      var cells = $('.file-selector').find('td');
+
+      $.post(url, {'category_id': id}).done(function(data) {
+        cells.each(function(index, cell) {
+          // Bandera para definir si se debe ver esta celda
+          var flag = false;
+          // Buscar si la celda deberia mostrarse
+          $.each(data, function(index, dat) {
+            if($(cell).attr('value') == dat) {
+              flag = true;
+            }
+          });
+
+          // Escronder las que no se deberian ver
+          if(!flag) {
+            $(cell).hide();
+          } else { // Mostrar las que se deberian ver
+            if(!$(cell).is(':visible')) {
+              $(cell).show();
+            }
+          }
+        });
+      });
+    });
+
+    $('.file-selector td').click(function() {
+        var images = $('.images');
+
+        if($(this).attr('class') == 'selected') {
+          // Si el elemento esta seleccionado, hay que deseleccionarlo
+          $(this).attr('class', '');
+          var id = $(this).attr('value');
+          images.val().split(',').forEach(function(idImage) {
+            if(idImage == id) {
+              images.val(images.val().replace(idImage + ',', ''));
+            }
+          });
+        } else {
+          // Seleccionar elemento
+          $(this).attr('class', 'selected');
+          images.val(images.val() + $(this).attr('value') + ',');
+        }
+    });
+
+  });
+</script>

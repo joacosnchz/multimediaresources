@@ -1,0 +1,218 @@
+<%= form_for @profile.user, :url => {:controller => :users, :action => :password_update}, :method => :post, :html => { :class => 'form-horizontal' } do |f| %>
+  <table style="width: 100%;" class="table table-bordered table-condensed table-nohover table-form">
+    <thead>
+      <tr class="box_title">
+        <th colspan="2"><h4>Actualizar contraseña</h4></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="control-group">
+            <%= f.label :password, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.password_field :password, :class => 'text_field', :pattern => '.{6,}', :title => 'Minimo 6 caracteres' %>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="control-group">
+            <span class="control-label">Repetir contraseña</span>
+            <div class="controls">
+              <%= f.password_field :password_verification, :class => 'text_field', :pattern => '.{6,}', :title => 'Minimo 6 caracteres' %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2" style="text-align: center;">
+          <%= f.submit "Aceptar", :class => 'btn btn-primary' %>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+<% end %>
+
+<%= form_for @profile, :html => { :class => 'form-horizontal' } do |f| %>
+  
+  
+  <table style="width: 100%;" class="table table-bordered table-condensed table-nohover table-form">
+    <thead>
+      <tr class="box_title">
+        <th colspan="2"><h4>Informacion personal</h4></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2">
+          <div class="control-group">
+            <%= f.label :photo, :class => 'control-label' %>
+            <div class="controls">
+              <%= image_tag @profile.photo.url(:thumb) %><br/>
+              <%= f.file_field :photo %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="control-group">
+            <%= f.label :first_name, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :first_name, :class => 'text_field' %>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="control-group">
+            <%= f.label :last_name, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :last_name, :class => 'text_field' %>
+            </div>
+          </div>
+        </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="control-group">
+              <%= f.label :country_id, :class => 'control-label' %>
+              <div class="controls">
+                <%= select_tag :country_id, options_from_collection_for_select(@countries, "id", "name", @selected_country.id) %>
+              </div>
+            </div>
+            <div class="control-group">
+              <%= f.label :state_id, :class => 'control-label' %>
+              <div class="controls">
+                <%= select_tag :state_id, options_from_collection_for_select(@states, "id", "name", @selected_state.id) %>
+              </div>
+            </div>
+            <div class="control-group">
+              <%= f.label :city, :class => 'control-label' %>
+              <div class="controls">
+                <%= f.select :city_id, options_from_collection_for_select(@cities, "id", "name", @selected_city.id) %>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="control-group">
+              <%= f.label :address, :class => 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :address, :class => 'text_field' %>
+              </div>
+            </div>
+            <div class="control-group">
+              <%= f.label :zip, :class => 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :zip, :class => 'text_field' %>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="control-group">
+              <%= f.label :birth_date, :class => 'control-label' %>
+              <div class="controls">
+                <% if @profile.birth_date.present? %>
+                  <%= f.text_field :birth_date, :class => 'datepicker required', :value => @profile.birth_date.strftime("%d-%m-%Y") %>
+                <% else %>
+                  <%= f.text_field :birth_date, :class => 'datepicker required' %>
+                <% end %>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="control-group">
+              <%= f.label :gender, :class => 'control-label' %>
+              <div class="controls">
+                <%= f.select :gender, [['Masculino', 'M'],['Femenino', 'F'],['Otro', 'O'],], :class => 'select_field datepicker', :include_blank => true %>
+              </div>
+            </div>
+          </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      
+    </tfoot>
+  </table>
+  
+  
+  <table style="width: 100%;" class="table table-bordered table-condensed table-nohover table-form">
+    <thead>
+      <tr class="box_title">
+        <th colspan="2"><h4>Informacion de Contacto</h4></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="control-group">
+            <%= f.label :phone, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :phone, :class => 'text_field' %>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="control-group">
+            <%= f.label :mobile, :class => 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :mobile, :class => 'text_field' %>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      
+    </tfoot>
+  </table>
+  
+  <div class="form-actions">
+    <%= f.submit "Aceptar", :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                profiles_path, :class => 'btn' %>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "jquery-datepicker-es" %>
+<script type="text/javascript">
+  $(function() {
+    $('.datepicker').datepicker({
+      dateFormat: 'dd-mm-yy'
+    });
+  });
+
+  $(document).ready(function() {
+    $("#country_id").change(function() {
+      $.post("/countries/get_states/", { id: $(this).val() }, function(data) {
+          populateDropdown($("#state_id"), data, <%= @states.first.id || 0 %>);
+          $("#state_id").change();
+      });
+    });
+  });
+  
+  $(document).ready(function() {
+    $("#state_id").change(function() {
+      $.post("/states/get_cities/", { id: $(this).val() }, function(data) {
+          populateDropdown($("#profile_city_id"), data, <%= @selected_city.id || 0 %>);
+      });
+    });
+  });
+  
+  function populateDropdown(select, data, selectedId) {
+    select.html('');
+    $.each(data, function(id, option) {
+      if (selectedId != null) {
+        var selectedTag = (option.id == selectedId) ? 'selected' : '';
+      } else {
+        var selectedTag = '';
+      }
+      
+      select.append('<option value="' + option.id + '" ' + selectedTag + '>' + option.name + '</option>');
+    });        
+  }
+  
+</script>

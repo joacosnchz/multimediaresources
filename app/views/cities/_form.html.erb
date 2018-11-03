@@ -1,0 +1,57 @@
+<%= form_for @city, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :country_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= select_tag :country_id, options_from_collection_for_select(@countries, "id", "name", @selected_country.id) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :state_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :state_id, options_from_collection_for_select(@states, "id", "name", @selected_state.id) %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :phone_area_code, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :phone_area_code, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                cities_path, :class => 'btn' %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    $("#country_id").change(function() {
+      $.post("/countries/get_states/", { id: $(this).val() }, function(data) {
+          populateDropdown($("#city_state_id"), data, <%= @city.state_id || 0 %>);
+      });
+    });
+  });
+  
+  function populateDropdown(select, data, selectedId) {
+    select.html('');
+    $.each(data, function(id, option) {
+      if (selectedId != null) {
+        var selectedTag = (option.id == selectedId) ? 'selected' : '';
+      } else {
+        var selectedTag = '';
+      }
+      
+      select.append('<option value="' + option.id + '" ' + selectedTag + '>' + option.name + '</option>');
+    });        
+  }
+
+</script>

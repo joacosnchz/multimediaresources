@@ -1,0 +1,59 @@
+<%= form_for @attachment, :html => { :class => 'form-horizontal' } do |f| %>
+  <% if @attachment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@attachment.errors.count, "error") %> prohibited this attachment from being saved:</h2>
+
+      <ul>
+      <% @attachment.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <span class='control-label'>Descripción</span>
+    <div class="controls">
+      <%= f.text_field :name, :maxlength => 50, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class='control-label'>Archivo</span>
+    <div class="controls">
+      <% if @attachment.new_record? %>
+        <%= f.file_field :attach, :class => 'text_field', :required => 'required' %>
+      <% else %>
+        <%= text_field_tag :attach_file_name, @attachment.attach_file_name, :disabled => 'disabled' %><br><br>
+        <% if @attachment.attach_content_type =~ /^image\// %>
+          <img src="<%= @attachment.attach.url %>" width="225px" height="225px" />
+        <% end %>
+        <% if @attachment.attach_content_type =~ /^video\// %>
+          <video width="225px" height="225px" controls>
+            <source src="<%= @attachment.attach.url %>" type="<%= @attachment.attach_content_type %>">
+          </video>
+        <% end %>
+        <% if @attachment.attach_content_type =~ /^audio\// %>
+          <audio width="225px" height="225px" controls>
+            <source src="<%= @attachment.attach.url %>" type="<%= @attachment.attach_content_type %>" >
+          </audio>
+        <% end %>
+        <% if @attachment.attach_content_type =~ /^application\// %>
+          <img src='/assets/icon/document-icon.png' width='225px' heigth='225px' class='attach' />
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <span class='control-label'>Categoría</span>
+    <div class="controls">
+      <%= f.select :category_id, options_for_select(Category.order('description').all.collect{|c| [c.description, c.id]}, @attachment.category_id), :class => 'form-control', :required => 'required' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Aceptar", :class => 'btn btn-primary' %>
+    <%= link_to "Cancelar", attachments_path, :class => 'btn' %>
+  </div>
+<% end %>

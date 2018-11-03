@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  state: 
+  name: MyString
+  phone_area_code: MyString
+
+two:
+  state: 
+  name: MyString
+  phone_area_code: MyString

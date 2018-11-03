@@ -1,0 +1,45 @@
+<%= form_tag(materials_path, method: :put, :id => 'customer_search', :remote => false) %>
+  <table class="table table-bordered table-condensed table-nohover">
+    <thead>
+      <tr><th colspan="3">Criterios de busqueda</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="control-group">
+            <div class="controls">
+              <%= text_field_tag :title, session[controller_name.to_sym][:title], :class => 'text_field', :placeholder => 'Titulo' %>
+              <%= select_tag :media_type_id, options_for_select(MediaType.order('name').all.collect{|m| [m.name, m.id]}, session[controller.controller_name.to_sym][:media_type_id]), {prompt: 'Seleccione tipo de medio'} %>
+              <span class="media"><%= select_tag :media_id, options_for_select(Media.order('nombre').all.collect{|m| [m.nombre, m.id]}, session[controller.controller_name.to_sym][:media_id]), {prompt: 'Seleccione medio'} %></span>
+              <%= select_tag :orden, options_for_select(Array(:Título => "title", :Fecha => "created_at"), session[controller_name.to_sym][:orden]), {prompt: 'Ordenar por'} %>
+              <br>
+              <%= select_tag :envios, options_for_select(Array(:Enviado => "env", "No enviado" => "noenv"), session[controller_name.to_sym][:envios]), {prompt: 'Estado de envío'} %>
+              <%= text_field_tag :fecha, session[controller_name.to_sym][:fecha], :class => 'datepicker text_field', :placeholder => 'Fecha' %>
+              <%= button_tag(:class => 'btn btn-primary', :style => 'margin-top:-10px') do %>
+                <span class="icon-search"></span> Buscar
+              <% end %>
+              <%= link_to "Reestablecer", materials_path(:reset => true), :class => 'btn btn-default', :style => 'margin-top:-10px' %>
+            </div>
+          </div>
+        </td>
+    </tbody>
+  </table>
+</form>
+
+<script>
+$(function() {
+  $('#media_type_id').change(function(e) {
+    e.preventDefault();
+
+    var url = "/materials";
+
+    $.post(url, {'filtro_tm': $(this).val()}).done(function(data) {
+      $('.media').html(data);
+    });
+  });
+
+  $('.datepicker').datepicker({
+    dateFormat: 'dd-mm-yy'
+  });
+});
+</script>

@@ -1,0 +1,17 @@
+<div class="span2">
+  <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+      <li class="nav-header"><%= t('sidebar.title') %></li>
+      <li><%= link_to 'Inicio', "/"  %></li>
+      <li><%= link_to t('menu.profile'), profile_edit_path  %></li>
+      <li><%= link_to "Archivos", attachments_path  %></li>
+      <li><%= link_to "Categorias", categories_path  %></li>
+      <% if current_user.has_role? :consumer %>
+        <li><%= link_to "Materiales", '/materials/my_materials'  %></li>  
+      <% else %>
+        <li><%= link_to "Materiales", materials_path  %></li>
+      <% end %>
+      <li><%= link_to t('menu.logout'), destroy_user_session_path, :method => :delete  %></li>
+    </ul>
+  </div><!--/.well -->
+</div><!--/span-->

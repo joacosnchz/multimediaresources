@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  media: 
+  media_type: 
+
+two:
+  media: 
+  media_type: 

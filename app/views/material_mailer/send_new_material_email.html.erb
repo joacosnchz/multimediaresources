@@ -1,0 +1,42 @@
+  <table class="body-wrap">
+    <tr>
+      <td></td>
+      <td class="container" bgcolor="#FFFFFF">
+
+        <!-- content -->
+        <div class="content">
+        <table>
+          <tr>
+            <td>
+              <p>Hola <%= @user.email %>!</p>
+              <p>Un nuevo Material ha sido publicado por <b><%= @material.user.email %></b></p>
+              <table>
+                <tr class="padding">
+                  <td>
+                    <%= @material.title %>
+                  </td>
+                </tr>
+                <tr class="padding">
+                  <td>
+                    <%= raw @material.body %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="padding">
+                    <p style="text-align: center;"><%= link_to 'Ver Material', "#", :class => "btn-primary" %></p>
+                  </td>
+                </tr>
+              </table>
+              <p>Si tienes algun problema, por favor contacta con soporte tecnico.</p>
+              <p><a href="mailto:support@dsnempresas.com.ar">support@dsnempresas.com.ar</a></p>
+              <p>Gracias, que tenga un buen dia.</p>
+            </td>
+          </tr>
+        </table>
+        </div>
+        <!-- /content -->
+        
+      </td>
+      <td></td>
+    </tr>
+  </table>

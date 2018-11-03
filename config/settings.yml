@@ -1,0 +1,94 @@
+defaults: &defaults
+  test: 'Hola mundo!'
+  
+  error_codes:
+    success: '0'
+    
+  roles:
+    - :admin
+    - :publisher
+    - :consumer
+    
+development:
+  <<: *defaults
+  email:
+    address: 'smtp.gmail.com'
+    port: 587
+    domain: 'gmail.com'
+    default_from: 'Plataforma Digital Concordia <plataformaconcordia@gmail.com>'
+  site:
+    url: 'http://localhost:3001'
+    domain: 'localhost.com'
+    maintenance_mode: false
+    name: 'BtoB'
+    slogan: 'Gestor de Contenidos.'
+    company_name: 'DSN Empresas'
+    email_admin: 'paul.eduardo.marclay@gmail.com'
+    phone_admin: '+54.345.493.0600'
+    admin_name: 'Paul'
+    copyright: 'Plataforma Digital de compartición de recursos Multimediales - Copyright 2015(c) Municipalidad de Concordia - Gestión participativa. DSN Empresas - 1ro. de Mayo 172 - Cdia. Argentina.'
+    resource_server: 'http://localhost:3000/resources'
+    
+staging:
+  <<: *defaults
+  email:
+    address: 'smtp.gmail.com'
+    port: 587
+    domain: 'gmail.com'
+    default_from: 'Plataforma Digital Concordia <plataformaconcordia@gmail.com>'
+  site:
+    url: 'http://localhost:3001'
+    domain: 'localhost.com'
+    maintenance_mode: false
+    name: 'Zero Money'
+    slogan: 'Comprar sin dinero.'
+    company_name: 'Dolem Labs'
+    email_admin: 'paul.eduardo.marclay@gmail.com'
+    phone_admin: '+54.345.493.0600'
+    admin_name: 'Paul'
+    copyright: 'Plataforma Digital de compartición de recursos Multimediales - Copyright 2015(c) Municipalidad de Concordia - Gestión participativa. DSN Empresas - 1ro. de Mayo 172 - Cdia. Argentina.'
+    resource_server: 'http://localhost:3010/resources'
+    redmine_server: 'http://74.207.230.76:3004'
+    
+test:
+  <<: *defaults
+  email:
+    address: 'smtp.gmail.com'
+    port: 587
+    domain: 'gmail.com'
+    default_from: 'Plataforma Digital Concordia <plataformaconcordia@gmail.com>'
+  site:
+    url: 'http://localhost:3000'
+    domain: 'localhost.com'
+    maintenance_mode: false
+    name: 'Base'
+    slogan: 'Base site, TEST.'
+    company_name: 'Dolem Labs'
+    email_admin: 'paul.eduardo.marclay@gmail.com'
+    phone_admin: '+54.345.493.0600'
+    admin_name: 'Paul'
+    copyright: 'Plataforma Digital de compartición de recursos Multimediales - Copyright 2015(c) Municipalidad de Concordia - Gestión participativa. DSN Empresas - 1ro. de Mayo 172 - Cdia. Argentina.'
+    resource_server: 'http://localhost:3010/resources'
+    redmine_server: 'http://74.207.230.76:3004'
+    
+production:
+  <<: *defaults
+  email:
+    address: 'smtp.gmail.com'
+    port: 587
+    domain: 'gmail.com'
+    default_from: 'Plataforma Digital Concordia <plataformaconcordia@gmail.com>'
+  site:
+    url: 'http://74.207.230.76:3010'
+    domain: 'localhost.com'
+    maintenance_mode: false
+    name: 'BtoB'
+    slogan: 'Gestor de Contenidos.'
+    company_name: 'DSN Empresas'
+    email_admin: 'paul.eduardo.marclay@gmail.com'
+    phone_admin: '+54.345.493.0600'
+    admin_name: 'Paul'
+    copyright: 'Plataforma Digital - Copyright 2015(c) Municipalidad de Concordia - DSN Empresas +54-0345-421-40633'
+    resource_server: 'http://74.207.230.76:3004/resources'
+    redmine_server: 'http://74.207.230.76:3004'
+    

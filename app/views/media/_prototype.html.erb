@@ -1,0 +1,23 @@
+<script>
+$(function() {
+	$(".remove_medio__index__").click(function(e) {
+		e.preventDefault();
+
+		$(this).parent().remove();
+	});
+});
+</script>
+
+<div class="controls">
+	<select name="media[media_type][__index__]">
+		<option value="">Seleccione tipo de medio</option>
+		<% @media_types.each do |media_type| %>
+			<option value="<%= media_type.id %>"><%= media_type.name %></option>
+		<% end %>
+	</select>
+	<div></div>
+	<a href="#" class="remove_medio__index__">
+		Eliminar t. de medio&nbsp;
+		<%= image_tag "icon/less-icon.png" %>
+	</a>
+</div>

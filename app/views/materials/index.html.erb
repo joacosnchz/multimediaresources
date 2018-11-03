@@ -1,0 +1,150 @@
+<%- model_class = Material -%>
+<h2><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h2>
+
+<% if not current_user.has_role? :consumer %>
+<div class="form-actions">
+    <table>
+        <tr>
+          <td><%= link_to t('.new', :default => t("helpers.links.new")),
+            new_material_path,
+            :class => 'btn btn-primary', :style => 'color:white' %></td>
+          <td><button class="btn editar">Editar</button></td>
+          <td><button class="btn btn-danger borrar">Borrar</button></td>
+          <td><button class="btn btn-info email">Enviar mail</button></td>
+          <td><button class="btn btn-default pdf">Exportar a pdf</button></td>
+        </tr>
+    </table>
+</div>
+
+<%= render 'search_form' %>
+<% else %>
+<div class="form-actions">
+    <table>
+        <tr>
+          <td><button class="btn btn-default pdf">Exportar a pdf</button></td>
+        </tr>
+    </table>
+</div>
+<% end %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><input type="checkbox" value="yes" id="selectAll"></th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th>Envíos</th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @materials.each_with_index do |material, index| %>
+      <tr id="list">
+        <td><%= index + 1 %></td>
+        <td><input type="checkbox" class="tf" value="<%= material.id %>" ></td>
+        <% if current_user.roles.first.name == 'consumer' %>
+          <td><%= link_to t('.show', :default => material.title), material_path(material.id), :style => 'text-decoration:underline' %></td>
+        <% else %>
+          <td><%= link_to t('.edit', :default => material.title), edit_material_path(material.id), :style => 'text-decoration:underline' %></td>
+        <% end %>
+        <td>
+          <% count = 0 %>
+          <% @sent_materials.each do |sent| %>
+            <% if sent.material_id == material.id %>
+              <% count = count + 1 %>
+            <% end %>
+          <% end %>
+          <% if count > 0 %>
+            <% if count  == 1 %>
+              <span class="text-info">Enviado <%= count %> vez</span>
+            <% else %>
+              <span class="text-info">Enviado <%= count %> veces</span>
+            <% end %>
+          <% else %>
+            <span class="text-warning">No enviado</span>
+          <% end %>
+        </td>
+        <td><%=l material.created_at, format: '%a, %d de %b de %Y' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="digg_pagination">
+  <%= will_paginate @media_types, :container => false %>
+</div>
+
+<script>
+$(function() {
+  $('.editar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var route = '<%= link_to 'Editar', edit_material_path('PLACEHOLDER') %>';
+      ids.forEach(function(id, index, array) {
+        if(id != 'yes') {
+          /* Me quedo con el index 1 porque divido la url con el caracter " y el primero tiene el contenido del href */
+          window.location = route.replace('PLACEHOLDER', id).split('"')[1];
+        }
+      });     
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+
+  $('.borrar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var c = confirm('Esta seguro?');
+      if(c == true) {
+        var route = '/materials/bulk_delete?ids=PLACEHOLDER';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+      }
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+
+  $('.email').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var c = confirm('Esta seguro?');
+      if(c == true) {
+        var route = '/materials/send_mail?ids=PLACEHOLDER';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+      }
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+
+  $('.pdf').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+        var route = '/materials/PLACEHOLDER/material_to_pdf';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+});
+</script>

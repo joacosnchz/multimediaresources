@@ -1,0 +1,8 @@
+<% if @medias.any? %>
+	<% @medias.each_with_index do |medio, index| %>
+		<label style="display:inline" for="<%= medio.id %>"><%= medio.nombre %></label>&nbsp;
+		<input type="checkbox" id="<%= medio.id %>" value="<%= medio.id %>" name="material[media][__index2__]" /><br />
+	<% end %>
+<% else %>
+	<b>No hay medios para este tipo de medio</b>
+<% end %>

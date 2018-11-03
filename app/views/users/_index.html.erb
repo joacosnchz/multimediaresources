@@ -1,0 +1,93 @@
+<%- model_class = User -%>
+
+<div class="form-actions">
+<table>
+<tr>
+  <td><%= link_to t('.new', :default => t("helpers.links.new")),
+            new_user_path,
+            :class => 'btn btn-primary', :style => 'color:white' %>
+  </td>
+  <td><button class="btn editar">Editar</button></td>
+  <td><button class="btn btn-danger borrar">Borrar</button></td>
+</tr>
+</table>
+</div>
+
+<%= render 'search_form' %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th><input type="checkbox" value="yes" id="selectAll" /></th>
+      <th><%= model_class.human_attribute_name(:email) %></th>
+      <th><%= model_class.human_attribute_name(:roles) %></th>
+      <th><%= model_class.human_attribute_name(:last_sign_in_at) %></th>
+      <th><%= model_class.human_attribute_name(:failed_attempts) %></th>
+      <th><%= model_class.human_attribute_name(:is_active) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if @users.count > 0 %>
+      <% @users.each_with_index do |user, index| %>
+        <tr id="list">
+          <td><%= index + 1 %></td>
+          <td><input type="checkbox" value="<%= user.id %>" class="tf" /></td>
+          <td><%= link_to user.email, edit_user_path(user), :style => 'text-decoration:underline' %></td>
+          <td><%= user.get_i18n_roles %></td>
+          <td><%= user.last_sign_in_at %></td>
+          <td><%= user.failed_attempts %></td>
+          <td><%= t user.is_active %></td>
+        </tr>
+      <% end %>
+    <% else %>
+        <tr><td colspan="7"><h3>Sin resultados!</h3></td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="digg_pagination">
+  <%= will_paginate @users, :container => false %>
+</div>
+
+<script>
+$(function() {
+  $('.editar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var route = '<%= link_to 'Editar', edit_user_path('PLACEHOLDER') %>';
+      ids.forEach(function(id, index, array) {
+        if(id != 'yes') {
+          /* Me quedo con el index 1 porque divido la url con el caracter " y el primero tiene el contenido del href */
+          window.location = route.replace('PLACEHOLDER', id).split('"')[1];
+        }
+      });     
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+
+  $('.borrar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var c = confirm('Esta seguro?');
+      if(c == true) {
+        var route = '/users/bulk_delete?ids=PLACEHOLDER';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+      }
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+});
+</script>

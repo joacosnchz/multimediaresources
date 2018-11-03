@@ -1,0 +1,83 @@
+<style>
+  .attach {
+    padding: 20px;
+    border: 1px solid #999;
+    box-shadow: 0px 0px 1px #999;
+    transition: box-shadow 0.5s;
+  }
+
+  .attach-img {
+    background-image: url('/assets/icon/zoom-img.png');
+    background-repeat: no-repeat;
+  }
+
+  .attach-img:hover {
+    box-shadow: 0px 0px 5px #000;
+  }
+</style>
+
+<% archivos.each do |attachment| %>
+  <div id="attachments_<%= attachment.id %>" class="controls" style="border-bottom:  dashed 1px gray;">
+    <p>
+    	<% if attachment.attach_content_type =~ /^image\// %>
+    		<img src="<%= attachment.attach.url %>" width="225px" height="225px" data-toggle="modal" data-target="#img<%= attachment.id %>" class="attach attach-img" />
+    	<% end %>
+
+    	<% if attachment.attach_content_type =~ /^video\// %>
+    		<video width="225px" height="225px" class="attach" controls>
+    			<source src="<%= attachment.attach.url %>" type="<%= attachment.attach_content_type %>">
+    		</video>
+    	<% end %>
+
+    	<% if attachment.attach_content_type =~ /^audio\// %>
+    		<audio width="225px" height="225px" class="attach" controls>
+    			<source src="<%= attachment.attach.url %>" type="<%= attachment.attach_content_type %>" >
+    		</audio>
+    	<% end %>
+
+      <% if attachment.attach_content_type =~ /^application\// %>
+        <img src='/assets/icon/document-icon.png' width='225px' heigth='225px' class='attach' />
+      <% end %>
+    </p><br>
+
+    <%= link_to attachment_download_path(attachment), :style => 'text-decoration:underline;' do %>
+      Descargar archivo<%= image_tag('icon/download-icon.png') %><% end %>&nbsp;
+    <a href='#' class='remove_attachment_<%= attachment.id %>' data-id="<%= attachment.id %>" style='text-decoration:underline;'>
+  		Eliminar archivo
+      <%= image_tag "icon/less-icon.png" %>
+	 </a>
+  </div>
+
+  <div class="modal fade" id="img<%= attachment.id %>" tabindex="-1" style='display:none' data-focus-on="input:first">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Archivo</h4>
+      </div>
+      <div class="modal-body" style="height:400px;overflow:scroll">
+      	<img src="<%= attachment.attach.url %>" />
+      </div>
+     </div>
+  	</div>
+  </div>
+
+  <script>
+	$(function() {
+		$('.remove_attachment_<%= attachment.id %>').click(function(e) {
+			e.preventDefault();
+			var images = $('.images');
+			var cell = $('.file-selector td[value=<%= attachment.id %>]');
+
+			cell.attr('class', '');
+			images.val().split(',').forEach(function(idImage) {
+				if(idImage == '<%= attachment.id %>') {
+					images.val(images.val().replace(idImage + ',', ''));
+				}
+			})
+	    
+			$(this).parent().remove();
+		});
+	});
+	</script>
+<% end %>

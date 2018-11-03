@@ -1,0 +1,77 @@
+<% @selected_media_types.each_with_index do |media_type, index| %>
+  <script>
+    $(function() {
+      $('.tipomedio<%= index %>').bind('DOMSubtreeModified', function() {
+        $(this).trigger('change');
+      });
+
+      $('.tipomedio<%= index %>').change(function() {
+        // var url = $('#new_material').attr('action');
+        var url = '/materials';
+        var counter = $('.counter');
+
+        $('.cargando').dialog('open');
+        $.post(url, {'id_tipomedio': $(this).val()}).done(function(data) {
+          $('.medios<%= index %>').html(data);
+          var inputs = $('.medios<%= index %>').find('input');
+          inputs.each(function(index) {
+            data = data.replace('__index2__', counter.val());
+            counter.val(parseInt(counter.val()) + parseInt(1));
+          });
+          $('.medios<%= index %>').html(data);
+          $('.cargando').dialog('close');
+        });
+      });
+
+      $('.remove_medio<%= index %>').click(function(e) {
+        e.preventDefault();
+    
+        $(this).parent().remove();
+      });
+
+      $('.selectAll<%= index %>').click(function() {
+        var item = $('.medios<%= index %>').children('input');
+
+        if($(this).prop('checked')) {
+          item.prop('checked', true);
+        } else {
+          item.prop('checked', false);
+        }
+      });
+    });
+  </script>
+  <% @selected_medias.each do |media| %>
+    <script>
+      $(function() {
+        $(window).load(function() {
+          var inputs = $('.controls :input[value="<%= media.id %>"]');
+          inputs.each(function(index) {
+            $(this).prop('checked', 'checked');
+          });
+        });
+      });
+    </script>
+  <% end %>
+  <li>
+    <div class='controls' style='border-bottom:  dashed 1px gray;'>
+      <select class='tipomedio<%= index %>' name='material[media_type][<%= index %>]' data-toggle="tooltip" data-placement="top" title="Al seleccionar un tipo de medio, podrá ver sus medios">
+      <option value=''>Seleccione tipo de medio</option>
+        <% @media_types.each do |mt| %>
+          <option value="<%= mt.id %>" 
+          <% if mt.id == media_type.id %>
+          selected
+          <% end %>
+          ><%= mt.name %></option>
+        <% end %>
+      </select>
+      <input type="checkbox" id="selectAll<%= index %>" class="selectAll<%= index %>" />&nbsp;
+      <%= image_tag "icon/select-all-icon.png" %><br>
+      <div class="medios<%= index %>"></div>
+      <br>
+      <a href='#' class='remove_medio<%= index %>' style="text-decoration:underline;">
+        Eliminar tipo de medio
+        <%= image_tag "icon/less-icon.png" %>
+      </a>
+    </div>
+  </li>
+<% end %>

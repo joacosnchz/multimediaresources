@@ -1,0 +1,8 @@
+<%- model_class = Media -%>
+<% if false %>
+<h2 class="page-header"><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h2>
+<% end %>
+<h2 class="page-header">Nuevo medio</h2>
+
+<%= render 'form' %>
+

@@ -1,0 +1,6 @@
+<select name="media_id" id="media_id">
+	<option value="">Seleccione medio</option>
+	<% @medias.each do |media| %>
+		<option value="<%= media.id %>"><%= media.nombre %></option>
+	<% end %>
+</select>

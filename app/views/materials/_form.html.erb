@@ -1,0 +1,154 @@
+<script src="//cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
+
+<%= form_for @material, :html => { :class => 'form-horizontal', :multipart => true } do |f| %>  
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'text_field', :required => 'required', :maxlength => 50 %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :body, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :body, :class => 'text_area', :placeholder => "Enter text ..." %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <a href="#" class="add_adjunto control-label" style="background-color:transparent;color:#000">
+      Agregar adjuntos&nbsp;
+      <%= image_tag "icon/plus-icon.png" %>
+    </a>
+    <ul id="adjuntosHolder" style="list-style: none;" data-prototype='<%= render :partial => "materials/includes/adjuntos_prototype" %>'>
+    </ul>
+  </div>
+
+  <div class="control-group">
+    <a href="#" style="background-color:transparent;color:#000" class="control-label" data-toggle="modal" data-target="#myModal">
+      Seleccionar archivos&nbsp;
+      <%= image_tag "icon/file-icon.png" %>
+    </a>
+    <ul id="attachmentHolder" style="list-style: none;">
+      <% if @material.attachments.present? %>
+          <li>
+            <%= render :partial => 'attachments_show', :locals => {:archivos => @material.attachments} %>
+          </li>
+        <% @material.attachments.each do |attachment| %>
+          <script>
+            $(function() {
+              $('.images').val($('.images').val() + '<%= attachment.id %>,');
+
+              $('.file-selector td[value=<%= attachment.id %>]').attr('class', 'selected');
+            });
+          </script>
+        <% end %>
+      <% end %>
+    </ul>
+    <input type="hidden" name="material[attachments]" placeholder="Campo hidden" class="images" />
+  </div>
+  
+  <div class="control-group">
+    <a href="#" class="add_media control-label" style="background-color:transparent;color:#000">
+      Seleccionar medios&nbsp;
+      <%= image_tag "icon/plus-icon.png" %>
+    </a><br /><br />
+    <div class="control-label">&oacute; seleccionar todo&nbsp;<input type="checkbox" id="allMedias" /></div>
+  	<ul id="collectionHolder" style="list-style: none;" data-prototype='<%= render :partial => "prototype" %>'>
+      <% if @selected_media_types.present? %>
+        <%= render :partial => "reloadMedias" %>
+      <% end %>
+    </ul>
+    <div class="controls" id="mediasInfo"></div>
+  </div>
+
+  <%= render :partial => 'attach_selector' %>
+
+  <input type="hidden" value="0" class="counter" />
+  <input type="hidden" name="material[allMedias]" class="allMediasData" value="0" />
+
+  <div class="form-actions">
+    <%= f.submit "Aceptar", :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                materials_path, :class => 'btn' %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+$(function() {
+  CKEDITOR.config.height = 500
+  CKEDITOR.replace('material[body]');
+  
+  $('#allMedias').change(function(e) {
+    if($('#collectionHolder').is(':visible')) {
+      $('#collectionHolder').hide();
+      $('#mediasInfo').html('<div class="alert alert-success">Todos los medios seleccionados.</div>');
+      $('.allMediasData').val(1);
+    } else {
+      $('#collectionHolder').show();
+      $('#mediasInfo').html('');
+      $('.allMediasData').val(0);
+    }
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $('.add_media').click(function(e) {
+    e.preventDefault();
+    if($('.allMediasData').val()) {
+      $('#allMedias').attr('checked', false);
+      $('#collectionHolder').show();
+      $('#mediasInfo').html('');
+      $('.allMediasData').val(0);
+    }
+    var collectionHolder = $('#collectionHolder');
+    var index = collectionHolder.find('li').length;
+
+    var data = collectionHolder.data('prototype');
+    data = data.replace(/__index__/g, index);
+    collectionHolder.append('<li>' +  data + '</li>');
+  });
+
+  $('.add_adjunto').click(function(e) {
+    e.preventDefault();
+    var adjuntosHolder = $('#adjuntosHolder');
+    var index = adjuntosHolder.find('li').length;
+
+    var data = adjuntosHolder.data('prototype');
+    data = data.replace(/__index__/g, index);
+    adjuntosHolder.append('<li>' + data + '</li>');
+  })
+
+  $('#new_material').submit(function(e) {
+    tmlen = $('#collectionHolder').find('li').length;
+
+    if($('.allMediasData').val() == '0') {
+      if(tmlen > 0) {
+        for(var i = 0;i< tmlen;i++) {
+          if($('.medios' + i + ' input:checkbox:checked').length == 0) {
+            alert('Por favor, seleccione algún medio en cada tipo de medio.');
+            $('.medios' + i).css('background-color', 'rgba(255,0,0,0.4)');
+            $('.medios' + i).change(function() {
+              $('.medios' + i).css('background-color', '#fff');
+            });
+            e.preventDefault();
+            return;
+          }
+        }
+      } else {
+        e.preventDefault();
+        alert('Por favor, seleccione tipos de medios y medios antes de continuar.')
+      }
+    }
+  });
+});
+</script>
+
+ <script type='text/javascript' charset='UTF-8'>
+  $(document).ready(function(){  
+    $('#new_material[data-remote]').bind("ajax:before", function(){
+      for (instance in CKEDITOR.instances){
+        CKEDITOR.instances[instance].updateElement();
+      }
+    });
+  });
+</script>

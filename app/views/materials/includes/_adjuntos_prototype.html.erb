@@ -1,0 +1,20 @@
+<div class="controls" style="border-bottom: dashed 1px gray;">
+	<p>
+		<input type="file" name="material[adjuntos][__index__]" />
+	</p>
+
+	<a href="#" class="eliminar_adjunto__index__" style="text-decoration:underline;">
+		Eliminar adjunto
+    	<%= image_tag "icon/less-icon.png" %>
+	</a>
+</div>
+
+<script>
+	$(function() {
+		$(".eliminar_adjunto__index__").click(function(e) {
+			e.preventDefault();
+
+			$(this).parent().remove();
+		});
+	});
+</script>

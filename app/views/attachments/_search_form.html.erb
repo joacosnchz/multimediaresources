@@ -1,0 +1,21 @@
+<%= form_tag(attachments_path, method: :put, :id => 'customer_search', :remote => false) %>
+  <table class="table table-bordered table-condensed table-nohover">
+    <thead>
+      <tr><th colspan="3">Criterios de busqueda</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="control-group">
+            <div class="controls">
+              <%= select_tag :category_id, options_for_select(Category.order('description').all.collect{|m| [m.description, m.id]}, session[controller.controller_name.to_sym][:category_id]), {prompt: 'Seleccione categoria'} %>
+              <%= button_tag(:class => 'btn btn-primary', :style => 'margin-top:-10px') do %>
+                <span class="icon-search"></span> Buscar
+              <% end %>
+              <%= link_to "Reestablecer", attachments_path(:reset => true), :class => 'btn btn-default', :style => 'margin-top:-10px' %>
+            </div>
+          </div>
+        </td>
+    </tbody>
+  </table>
+</form>

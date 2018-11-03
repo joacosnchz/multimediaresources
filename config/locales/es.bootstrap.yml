@@ -1,0 +1,84 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+
+es:
+  helpers:
+    actions: "Acciones"
+    links:
+      back: "Atrás"
+      cancel: "Cancelar"
+      confirm: "Está usted seguro?"
+      destroy: "Borrar"
+      new: "Nuevo"
+      edit: "Editar"
+    titles:
+      edit: "Editar %{model}"
+      save: "Guardar %{model}"
+      new: "Nuevo %{model}"
+      delete: "Borrar %{model}"
+  cities:
+    index:
+      title: 'Ciudades'
+    new:
+      title: 'Nueva Ciudad'
+    edit:
+      title: 'Actualizar Ciudad'
+    show:
+      title: 'Detalles de Ciudad'
+  states:
+    index:
+      title: 'Provincias'
+    new:
+      title: 'Nueva Provincia'
+    edit:
+      title: 'Actualizar Provincia'
+    show:
+      title: 'Detalles de Provincia'
+  countries:
+    index:
+      title: 'Países'
+    new:
+      title: 'Nuevo País'
+    edit:
+      title: 'Actualizar País'
+    show:
+      title: 'Detalles de País'
+  materials:
+    index:
+      title: 'Materiales'
+    new:
+      title: 'Nuevo Material'
+    edit:
+      title: 'Actualizar Material'
+    show:
+      title: 'Detalles de Material'
+  media_types:
+    index:
+      title: 'Tipos de Medios'
+    new:
+      title: 'Nuevo Tipo de Medio'
+    edit:
+      title: 'Actualizar Tipo de Medio'
+    show:
+      title: 'Detalles de Tipo de Medio'
+  profile:
+    index:
+      title: 'Perfiles'
+    new:
+      title: 'Nuevo Perfil'
+    edit:
+      title: 'Actualizar Perfil'
+    show:
+      title: 'Detalles de Perfil'
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,55 @@
+<script>
+	$(function() {
+		$(".remove_medio__index__").click(function(e) {
+			e.preventDefault();
+	
+			$(this).parent().parent().remove();
+		});
+
+		$(".tipomedio__index__").change(function() {
+			// var url = $("#new_material").attr("action");
+			var url = "/materials";
+			var counter = $(".counter");
+
+			$(".cargando").dialog("open");
+			$.post(url, {"id_tipomedio": $(this).val()}).done(function(data) {
+				$(".medios__index__").html(data);
+				var inputs = $(".medios__index__").find("input");
+				inputs.each(function(index) {
+					data = data.replace("__index2__", counter.val());
+					counter.val(parseInt(counter.val()) + parseInt(1));
+				});
+				$(".medios__index__").html(data);
+				$(".cargando").dialog("close");
+			});
+		});
+
+		$(".selectAll__index__").click(function() {
+			var item = $(".medios__index__").children("input");
+
+			if($(this).prop("checked")) {
+				item.prop("checked", true);
+			} else {
+				item.prop("checked", false);
+			}
+		});
+
+		$("[data-toggle=\"tooltip\"]").tooltip();
+	});
+</script>
+
+<div class="controls" style="border-bottom:  dashed 1px gray;">
+	<select class="tipomedio__index__" name="material[media_type][__index__]" data-toggle="tooltip" data-placement="top" title="Al seleccionar un tipo de medio, podrá ver sus medios" required="required">
+		<option value="">Seleccione tipo de medio</option>
+		<% @media_types.each do |tipo_medio| %>
+			<option value="<%= tipo_medio.id %>"><%= tipo_medio.name %></option>
+		<% end %>
+	</select>
+	<input type="checkbox" id="selectAll__index__" class="selectAll__index__" />&nbsp;
+	<%= image_tag "icon/select-all-icon.png" %>
+	<div class="medios__index__"></div><br>
+	<a href="#" class="remove_medio__index__" style="text-decoration:underline;">
+		Eliminar tipo de medio
+		<%= image_tag "icon/less-icon.png" %>
+	</a>
+</div>

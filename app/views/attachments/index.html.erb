@@ -1,0 +1,115 @@
+<%- model_class = Attachment -%>
+<h2>Archivos</h2>
+
+<div class="form-actions">
+<table>
+<tr>
+  <td><%= link_to 'Nuevo', new_attachment_path, :class => 'btn btn-primary', :style => 'color:#fff' %></td>
+  <% if false %>
+  <td><button class="btn descargar">Descargar</button></td>
+  <% end %>
+  <% if current_user.has_role? :admin %>
+  <td><button class="btn editar">Editar</button></td>
+  <td><button class="btn btn-danger borrar">Borrar</button></td>
+  <% end %>
+  <td><button class="btn descargar">Descargar</button></td>
+</tr>
+</table>
+</div>
+
+<%= render 'search_form' %>
+
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th><input type="checkbox" value="yes" id="selectAll"/></th>
+    <th>Nombre</th>
+    <th>Descripción</th>
+    <th>Categoría</th>
+    <th>Tamaño</th>
+    <th>Fecha</th>
+  </tr>
+  </thead>
+<tbody>
+<% @attachments.each_with_index do |attachment, index| %>
+  <tr id="list">
+    <td><%= index + 1 %></td>
+    <td><input type="checkbox" class="tf" value="<%= attachment.id %>" ></td>
+    <td><%= link_to edit_attachment_path(attachment), :style => 'text-decoration:underline' do %>
+      <%=h truncate(attachment.attach_file_name.split('.')[0], :length => 40) %>...<%= attachment.attach_file_name.split('.')[1] %><% end %></td>
+    <td><%= attachment.name %></td>
+    <% if attachment.category_id.present? %>
+      <td><%= attachment.category.description %></td>
+    <% else %>
+      <td></td>
+    <% end %>
+    <td><%= number_to_human_size(attachment.attach_file_size) %></td>
+    <% if attachment.created_at.present? %>
+      <td><%=l attachment.created_at, format: '%a, %d de %b de %Y' %></td>
+    <% end %>
+  </tr>
+<% end %>
+</tbody>
+</table>
+
+<div class="digg_pagination">
+  <%= will_paginate @attachments, :container => false %>
+</div>
+
+<script>
+$(function() {
+  $('.borrar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var c = confirm('Esta seguro?');
+      if(c == true) {
+        var route = '/attachments/bulk_delete?ids=PLACEHOLDER';
+        window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+      }
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+  
+  $('.descargar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var route = '/attachments/bulk_download?ids=PLACEHOLDER';
+      window.location = route.replace('PLACEHOLDER', ids).replace('yes,', '');
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+
+  $('.editar').click(function() {
+    var ids;
+
+    ids = $('input[type=checkbox]:checked').map(function() {
+      return $(this).attr('value');
+    }).get();
+
+    if(ids.length > 0) {
+      var route = '<%= link_to 'Editar', edit_attachment_path('PLACEHOLDER') %>';
+      ids.forEach(function(id, index, array) {
+        if(id != 'yes') {
+          /* Me quedo con el index 1 porque divido la url con el caracter " y el primero tiene el contenido del href */
+          window.location = route.replace('PLACEHOLDER', id).split('"')[1];
+        }
+      });     
+    } else {
+      alert('Por favor, seleccione un elemento de la lista');
+    }
+  });
+});
+</script>

@@ -1,0 +1,25 @@
+<%= form_for @category, :html => { :class => 'form-horizontal' } do |f| %>
+  <% if @category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@category.errors.count, "error") %> prohibited this category from being saved:</h2>
+
+      <ul>
+      <% @category.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <span class='control-label'>Descripción</span>
+    <div class="controls">
+      <%= f.text_field :description, :class => 'text_field', :required => 'required' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Aceptar", :class => 'btn btn-primary' %>
+    <%= link_to "Cancelar", categories_path, :class => 'btn' %>
+  </div>
+<% end %>
